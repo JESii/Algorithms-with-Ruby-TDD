@@ -1,24 +1,33 @@
 require 'pry'
 
 class Comparisons
-  def initialize(input_array, pivot = 'first_element')
+  def initialize(input_array, pivot = 'first_element_jes')
     @input_array = input_array.clone
-    puts "input: #{@input_array}" unless @input_array.size > 25
-    case pivot
-    when 'first_element'
-      @pivot = 'pivot_first_element'
-    end
-
+    puts "pivot: #{pivot}; size: #{@input_array.size}; input: #{@input_array[0..25]}#{@input_array.size > 25 ? '...': ''}"
+    @comparisons = 0
+    @pivot = pivot
   end
 
   def sort
-    _sort(@input_array, @pivot)
+    case @pivot
+    when 'first_element_jes'
+      # First attempt; moves the pivot at each comparison
+      _partition_first_element_jes(@input_array, 0)
+    when 'first_element'
+      # Moves the pivot at the end of a partitioning
+      _partition_first_element(@input_array, 0, 0)
+    else
+      fail "Invalid partition option: #{@pivot}"
+    end
   end
 
-  def _sort(ary, pivot)
-    puts "_sort: pivot: #{pivot}; ary: #{ary}"
-    return [] if ary.nil? || ary.empty?
-    return ary if ary.size == 1
+  def comparisons
+    @comparisons
+  end
+
+  def _partition_first_element(ary, ldx, rdx)
+    return ary if ary.size <= 1
+    @comparisons += ary.size - 1
     if ary.size == 2
       if ary[0] > ary[1]
         return [ary[1], ary[0]]
@@ -26,31 +35,44 @@ class Comparisons
         return ary
       end
     end
-    px = public_send(pivot, ary)
-    # puts "starting ary: #{ary}"
-    ary.each_index do |i|
-      next if i == 0
-      # puts "loop ary: #{ary}"
-      # binding.pry
-      if ary[px] > ary[i]
-        tmp = ary.delete_at i
-        # puts "tmp: #{tmp}"
-        ary.insert(px, tmp)
-        # puts "ary: #{ary}"
-        ary[px] = tmp
-        px += 1
-        # puts "ary: #{ary}; px: #{px}"
+    px = ary[ldx]
+    i = ldx + 1
+    (ldx+1..ary.size-1).each do |j|
+      if(px > ary[j])
+        ary[j], ary[i] = ary[i], ary[j]
+        i += 1
       end
     end
-      # binding.pry
-      puts "recursing: px: #{px}; array: #{ary}; Lslice: #{px == 0 ? [] : ary.slice(0..px-1)}; Rslice: #{ary.slice(px..-1)}"
-      lslice = px == 0 ? [] : ary.slice(0..px-1)
-      rslice = ary.slice(px..ary.size-1)
-      puts "results: Lslice - #{lslice}; Rslice - #{rslice}"
-      return [_sort(lslice, pivot), _sort(rslice, pivot)].flatten
+    ary[ldx], ary[i-1] = ary[i-1], ary[ldx]
+    return [_partition_first_element(ary.slice(0, i-1), 0, 0).flatten, ary[i-1], _partition_first_element(ary.slice(i, ary.size-1).flatten, 0, 0)].flatten
   end
 
-  def pivot_first_element(ary)
-    0
+  def _partition_first_element_jes(ary, pivot)
+    return [] if ary.nil? || ary.empty?
+    return ary if ary.size == 1
+    @comparisons += ary.size - 1
+    if ary.size == 2
+      if ary[0] > ary[1]
+        return [ary[1], ary[0]]
+      else
+        return ary
+      end
+    end
+    px =  pivot
+    ary.each_index do |i|
+      next if i == 0
+      if ary[px] > ary[i]
+        tmp = ary.delete_at i
+        ary.insert(px, tmp)
+        ary[px] = tmp
+        px += 1
+      end
+    end
+    # since pivot is in proper location, exclude it from partitions...
+    lslice = px == 0 ? [] : ary.slice(0..px-1)
+    rslice = ary.slice(px+1..ary.size-1)
+    # ... and just include it as part of the returned array
+    return [_partition_first_element_jes(lslice, pivot), ary[px], _partition_first_element_jes(rslice, pivot)].flatten
   end
+
 end
