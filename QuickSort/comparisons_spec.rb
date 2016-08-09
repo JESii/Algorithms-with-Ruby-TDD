@@ -93,6 +93,13 @@ RSpec.describe Comparisons do
       sorting = Comparisons.new(ta,'first_element')
       expect(sorting.sort).to eql ta.sort
     end
-
+  end
+  describe 'sort with pivot last-element', :last_element => true do
+    lopt = 'last-element'
+    if 'recognizes the last-element option' do
+      ary = [1,2]
+      last = Comparisons.net(lopt)
+      expect(last).to.not be_nil
+    end
   end
 end
