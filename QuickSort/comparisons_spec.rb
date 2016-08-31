@@ -148,7 +148,7 @@ RSpec.describe Comparisons do
           end
         end
         puts "Option: #{@lopt}"
-        puts "file array: #{ta}, id: #{ta.object_id}"
+        puts "file array: #{ta.slice(1,5)} - #{ta.slice(ta.size-5, ta.size)}, id: #{ta.object_id}"
         sorting = Comparisons.new(ta,@lopt)
         sorting.sort
         expect(ta).to eql ta.sort

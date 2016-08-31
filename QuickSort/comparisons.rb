@@ -4,7 +4,7 @@ class Comparisons
   def initialize(input_array, pivot = 'first_element_jes')
     @input_array = input_array.clone
     @input_array_same = input_array
-    # puts "pivot: #{pivot}; size: #{@input_array.size}; input: #{@input_array[0..25]}#{@input_array.size > 25 ? '...': ''}"
+    # puts "pivot: #{pivot}; size: #{@input_array.size}; input: #{@input_array[0..25]}#{@input_array.size > 25 ? '...': ''}" if $debug
     @comparisons = 0
     @pivot = pivot
   end
@@ -39,7 +39,7 @@ class Comparisons
 
   def _partition_last_element_swap(ary, ldx, rdx)
 
-    puts "Last_swap: #{ldx}, #{rdx} / #{ary}"
+    puts "Last_swap: #{ldx}, #{rdx} / #{ary.slice(ldx-2..ldx+2)} - #{ary.slice(rdx-2..rdx+2)}" if $debug
     # Handle the base case
     return if rdx <= ldx
     @comparisons += rdx - ldx
@@ -52,7 +52,7 @@ class Comparisons
     # Now handle partitioning off the last element
     # Swap pivot into first element
     ary[ldx], ary[rdx] = ary[rdx], ary[ldx]
-    puts "Last_swap-swapped: #{ldx}, #{rdx} / #{ary}"
+    puts "Last_swap-swapped: #{ldx}, #{rdx} / #{ary.slice(ldx-2..ldx+2)} - #{ary.slice(rdx-2..rdx+2)}" if $debug
     p = ary[ldx]
     i = ldx+1
     (ldx+1..rdx).each do |j|
@@ -63,17 +63,17 @@ class Comparisons
     end
     # Move the pivot to its proper location
 
-    puts "Last_swap-finishedScan: #{i} / #{ary}"
+    puts "Last_swap-finishedScan: #{i} / #{ary.slice(ldx-2..ldx+2)} - #{ary.slice(rdx-2..rdx+2)}" if $debug
     ary[ldx], ary[i-1] = ary[i-1], ary[ldx]
-    puts "Last_swap-pivotMoved: #{ldx}, #{rdx} / #{ary}"
+    puts "Last_swap-pivotMoved: #{ldx}, #{rdx} / #{ary.slice(ldx-2..ldx+2)} - #{ary.slice(rdx-2..rdx+2)}" if $debug
     if (i-2) > ldx && i < rdx
-    puts "Calling _partition(ary, #{ldx}, #{i-2}), _partition(ary, #{i}, #{rdx})"
+    puts "Calling _partition(ary, #{ldx}, #{i-2}), _partition(ary, #{i}, #{rdx})" if $debug
     [_partition_last_element_swap(ary, ldx, i-2), _partition_last_element_swap(ary, i, rdx)]
     elsif (i-2) > ldx
-    puts "Calling _partition(ary, #{ldx}, #{i-2})"
+    puts "Calling _partition(ary, #{ldx}, #{i-2})" if $debug
     [_partition_last_element_swap(ary, ldx, i-2)]
     elsif i < rdx
-    puts "Calling _partition(ary, #{i}, #{rdx})"
+    puts "Calling _partition(ary, #{i}, #{rdx})" if $debug
     [ _partition_last_element_swap(ary, i, rdx)]
     end
     return
