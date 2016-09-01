@@ -35,3 +35,9 @@ comparisons = Comparisons.new(ta.clone, 'last_element_swap')
 comparisons.sort
 result = comparisons.comparisons
 puts "'last_element_swap' comparisons  = #{result}"
+#
+# median_element_swap
+comparisons = Comparisons.new(ta.clone, 'median_element_swap')
+comparisons.sort
+result = comparisons.comparisons
+puts "'median_element_swap' comparisons  = #{result}"
