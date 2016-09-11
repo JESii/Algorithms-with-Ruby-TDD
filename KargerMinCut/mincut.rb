@@ -5,6 +5,7 @@ class MinCut
     @alist = alist
   end
   def self.create_alist_from_file(fname)
+    return [[]]
 
   end
 end
