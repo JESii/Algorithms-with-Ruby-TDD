@@ -5,7 +5,12 @@ class MinCut
     @alist = alist
   end
   def self.create_alist_from_file(fname)
-    return [[]]
-
+    alist = []
+    File.open(fname) do |f|
+      f.readlines.each do |line|
+        alist << (line.chomp.split(',').map { |e| e.to_i })
+      end
+    end
+    alist
   end
 end
